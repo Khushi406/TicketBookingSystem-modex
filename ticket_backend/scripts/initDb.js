@@ -16,18 +16,6 @@ const createTables = async () => {
       );
     `);
 
-    // Create seats table
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS seats (
-        id SERIAL PRIMARY KEY,
-        show_id INTEGER REFERENCES shows(id) ON DELETE CASCADE,
-        seat_number INTEGER NOT NULL,
-        booked BOOLEAN DEFAULT FALSE,
-        booking_id INTEGER REFERENCES bookings(id) ON DELETE SET NULL,
-        UNIQUE(show_id, seat_number)
-      );
-    `);
-
     // Create bookings table
     await client.query(`
       CREATE TABLE IF NOT EXISTS bookings (
@@ -38,6 +26,18 @@ const createTables = async () => {
         status VARCHAR(20) DEFAULT 'PENDING',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         reason VARCHAR(255)
+      );
+    `);
+
+    // Create seats table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS seats (
+        id SERIAL PRIMARY KEY,
+        show_id INTEGER REFERENCES shows(id) ON DELETE CASCADE,
+        seat_number INTEGER NOT NULL,
+        booked BOOLEAN DEFAULT FALSE,
+        booking_id INTEGER REFERENCES bookings(id) ON DELETE SET NULL,
+        UNIQUE(show_id, seat_number)
       );
     `);
 
