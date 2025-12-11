@@ -1,0 +1,223 @@
+.seat-grid-container {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2.5rem;
+  border: 1px solid #e5e7eb;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.screen {
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+  padding: 1.5rem 2rem;
+  margin-bottom: 3rem;
+  border-radius: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  overflow: hidden;
+}
+
+.screen-text {
+  position: relative;
+  z-index: 2;
+  font-size: 1.25rem;
+}
+
+.screen-glow {
+  position: absolute;
+  bottom: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: glow 3s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.seat-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1rem;
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.seat {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  animation: popIn 0.4s ease-out backwards;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.seat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.seat:hover::before {
+  opacity: 1;
+}
+
+.seat-number {
+  position: relative;
+  z-index: 1;
+}
+
+.seat.available {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.seat.available:hover {
+  transform: scale(1.15) translateY(-4px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+}
+
+.seat.available:active {
+  transform: scale(1.05);
+}
+
+.seat.selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: scale(1.15);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+  }
+  50% {
+    box-shadow: 0 8px 35px rgba(102, 126, 234, 0.7);
+  }
+}
+
+.seat.selected:hover {
+  transform: scale(1.2) translateY(-4px);
+}
+
+.seat.booked {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+.seat.booked:hover {
+  transform: none;
+}
+
+.seat:disabled {
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .seat-grid-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .screen {
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .screen-text {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+  }
+
+  .seat-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.75rem;
+    padding: 0.5rem;
+  }
+
+  .seat {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .seat-grid-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .screen {
+    padding: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .screen-text {
+    font-size: 1rem;
+    letter-spacing: 1.5px;
+  }
+
+  .seat-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+  }
+
+  .seat {
+    font-size: 0.8rem;
+    border-radius: 8px;
+  }
+
+  .seat.available:hover,
+  .seat.selected:hover {
+    transform: scale(1.1);
+  }
+}
