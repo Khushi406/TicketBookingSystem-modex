@@ -53,7 +53,7 @@ const createTables = async () => {
 
 const initializeDatabase = async () => {
   await createTables();
-  pool.end();
+  // pool.end(); // Do not end the pool here
 };
 
 // Run initialization if this script is executed directly
