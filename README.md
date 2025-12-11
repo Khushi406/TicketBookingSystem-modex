@@ -2,6 +2,7 @@
 
 This is a full-stack ticket booking application built with a Node.js/Express backend and a React/TypeScript frontend. It features a robust, concurrency-safe API for booking seats for different shows.
 
+Build and deployment are managed using Vercel for the frontend and Render for the backend.
 ## Live Application
 
 - **Frontend (Vercel)**: [https://ticket-booking-system-modex.vercel.app/](https://ticket-booking-system-modex.vercel.app/)
