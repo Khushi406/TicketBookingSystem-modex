@@ -3,7 +3,12 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const { startExpiryJob } = require('./jobs/expirePending');
-startExpiryJob();
+const { initializeDatabase } = require('./scripts/initDb');
+
+// Initialize database on startup
+initializeDatabase().then(() => {
+  startExpiryJob();
+});
 
 // Middleware
 app.use(cors({

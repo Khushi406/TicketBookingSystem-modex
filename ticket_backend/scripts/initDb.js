@@ -16,6 +16,18 @@ const createTables = async () => {
       );
     `);
 
+    // Create seats table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS seats (
+        id SERIAL PRIMARY KEY,
+        show_id INTEGER REFERENCES shows(id) ON DELETE CASCADE,
+        seat_number INTEGER NOT NULL,
+        booked BOOLEAN DEFAULT FALSE,
+        booking_id INTEGER REFERENCES bookings(id) ON DELETE SET NULL,
+        UNIQUE(show_id, seat_number)
+      );
+    `);
+
     // Create bookings table
     await client.query(`
       CREATE TABLE IF NOT EXISTS bookings (
@@ -24,7 +36,8 @@ const createTables = async () => {
         user_email VARCHAR(255) NOT NULL,
         seat_numbers INTEGER[] NOT NULL,
         status VARCHAR(20) DEFAULT 'PENDING',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        reason VARCHAR(255)
       );
     `);
 
@@ -35,8 +48,18 @@ const createTables = async () => {
     console.error('Error creating tables:', error);
   } finally {
     client.release();
-    pool.end(); // Close the pool
   }
 };
 
-createTables();
+const initializeDatabase = async () => {
+  await createTables();
+  pool.end();
+};
+
+// Run initialization if this script is executed directly
+if (require.main === module) {
+  initializeDatabase();
+}
+
+module.exports = { initializeDatabase };
+
