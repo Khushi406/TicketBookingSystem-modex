@@ -7,12 +7,11 @@ startExpiryJob();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'],
-  credentials: true
-}));
-// Middleware
-app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  origin: [
+    'http://localhost:3000', 
+    'http://localhost:3001',
+    'https://ticket-booking-system-modex.vercel.app'
+  ],
   credentials: true
 }));
 app.use(express.json());
