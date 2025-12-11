@@ -6,51 +6,38 @@ import { useToast } from '../../context/ToastContext';
 const CreateShowForm: React.FC = () => {
   const { addShow } = useShows();
   const { addToast } = useToast();
-  const [formData, setFormData] = useState({
-    name: '',
-    start_time: '',
-    total_seats: 40,
-  });
+  const [name, setName] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [totalSeats, setTotalSeats] = useState('40');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
+    const seats = Number(totalSeats);
 
-    if (!formData.name.trim()) {
+    if (!name.trim()) {
       newErrors.name = 'Show name is required';
-    } else if (formData.name.length < 3) {
+    } else if (name.length < 3) {
       newErrors.name = 'Show name must be at least 3 characters';
     }
 
-    if (!formData.start_time) {
+    if (!startTime) {
       newErrors.start_time = 'Start time is required';
     } else {
-      const selectedDate = new Date(formData.start_time);
+      const selectedDate = new Date(startTime);
       const now = new Date();
       if (selectedDate <= now) {
         newErrors.start_time = 'Start time must be in the future';
       }
     }
 
-    if (formData.total_seats < 1 || formData.total_seats > 100) {
-      newErrors.total_seats = 'Total seats must be between 1 and 100';
+    if (isNaN(seats) || seats < 1 || seats > 100) {
+      newErrors.total_seats = 'Total seats must be a number between 1 and 100';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors({ ...errors, [name]: '' });
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,12 +52,15 @@ const CreateShowForm: React.FC = () => {
 
     try {
       const show = await showsApi.createShow({
-        ...formData,
-        total_seats: Number(formData.total_seats),
+        name,
+        start_time: new Date(startTime).toISOString(),
+        total_seats: Number(totalSeats),
       });
       addShow(show);
       addToast(`Show "${show.name}" created successfully!`, 'success');
-      setFormData({ name: '', start_time: '', total_seats: 40 });
+      setName('');
+      setStartTime('');
+      setTotalSeats('40');
       setErrors({});
     } catch (err: any) {
       const errorMsg = err.error || err.message || 'Failed to create show';
@@ -88,8 +78,8 @@ const CreateShowForm: React.FC = () => {
           type="text"
           id="name"
           name="name"
-          value={formData.name}
-          onChange={handleChange}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           placeholder="e.g., Evening Express"
           className={errors.name ? 'input-error' : ''}
         />
@@ -102,8 +92,8 @@ const CreateShowForm: React.FC = () => {
           type="datetime-local"
           id="start_time"
           name="start_time"
-          value={formData.start_time}
-          onChange={handleChange}
+          value={startTime}
+          onChange={(e) => setStartTime(e.target.value)}
           className={errors.start_time ? 'input-error' : ''}
         />
         {errors.start_time && <span className="field-error">{errors.start_time}</span>}
@@ -115,8 +105,8 @@ const CreateShowForm: React.FC = () => {
           type="number"
           id="total_seats"
           name="total_seats"
-          value={formData.total_seats}
-          onChange={handleChange}
+          value={totalSeats}
+          onChange={(e) => setTotalSeats(e.target.value)}
           min="1"
           max="100"
           placeholder="Between 1 and 100"
