@@ -1,8 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { ShowProvider } from './context/ShowContext';
 import { ToastProvider } from './context/ToastContext';
-import Header from './components/shared/Header';
 import ToastContainer from './components/shared/ToastContainer';
 import AdminDashboard from './components/admin/AdminDashboard';
 import HomePage from './components/user/HomePage';
@@ -15,7 +14,15 @@ const App: React.FC = () => {
       <ShowProvider>
         <Router>
           <div className="App">
-            <Header />
+            <nav className="navbar">
+              <div className="nav-container">
+                <Link to="/" className="nav-title">Tickety</Link>
+                <div className="nav-links">
+                  <Link to="/" className="nav-link">Shows</Link>
+                  <Link to="/admin" className="nav-link">Admin</Link>
+                </div>
+              </div>
+            </nav>
             <ToastContainer />
             <main className="main-content">
               <Routes>
