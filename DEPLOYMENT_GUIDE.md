@@ -459,3 +459,88 @@ Video: https://youtu.be/your-video-id or gdrive link
 **Deployment Complete! 🚀**
 
 Your application is now live and ready for assessment.
+
+---
+
+# Deployment Guide
+
+This guide provides instructions for deploying the ticket booking application.
+
+## Backend Deployment (Render)
+
+The backend is a Node.js application that will be deployed as a Web Service on Render.
+
+### Prerequisites
+
+1.  A Render account.
+2.  A GitHub repository containing the project code.
+
+### Step 1: Create a PostgreSQL Database on Render
+
+1.  From your Render dashboard, click the **New +** button and select **PostgreSQL**.
+2.  Give your database a unique **Name**.
+3.  You can leave the other settings like **Database**, **User**, and **Region** as they are, or change them if you need to.
+4.  Select a **Plan**. The `Free` plan is a good option for development and small projects.
+5.  Click **Create Database**.
+6.  Once the database is created, go to its "Info" section and copy the **Internal Connection String**. You will need this for your backend's environment variables.
+
+### Step 2: Deploy the Backend Web Service
+    *   Go to your Render Dashboard.
+    *   Click on "New +" and select "Web Service".
+    *   Connect your GitHub account and select the repository for this project.
+
+2.  **Configure the Web Service:**
+    *   **Name:** Give your service a name (e.g., `ticket-booking-backend`).
+    *   **Region:** Choose a region close to you or your users.
+    *   **Branch:** Select the branch you want to deploy (e.g., `main`).
+    *   **Root Directory:** `ticket_backend`
+    *   **Runtime:** `Node`
+    *   **Build Command:** `npm install`
+    *   **Start Command:** `node index.js`
+    *   **Instance Type:** `Free` (or a paid plan if you need more resources).
+
+3.  **Add Environment Variables:**
+    *   Under "Environment", click "Add Environment Variable". You will need to add the following:
+        *   `MONGO_URI`: The connection string for your MongoDB database.
+        *   `PORT`: Render sets this automatically, but if your app needs it, it's usually `10000`. The current backend code uses port 5000, so you might need to update the code to use `process.env.PORT` or set this variable.
+        *   `JWT_SECRET`: A secret key for signing JWTs.
+
+4.  **Deploy:**
+    *   Click "Create Web Service". Render will start building and deploying your application.
+    *   Once the deployment is complete, you will get a URL for your backend API (e.g., `https://ticket-booking-backend.onrender.com`). You will need this for your frontend configuration.
+
+## Frontend Deployment (Vercel)
+
+The frontend is a React (Vite) application that will be deployed on Vercel.
+
+### Prerequisites
+
+1.  A Vercel account.
+2.  A GitHub repository containing the project code.
+
+### Deployment Steps
+
+1.  **Create a new Project on Vercel:**
+    *   Go to your Vercel Dashboard.
+    *   Click on "Add New..." and select "Project".
+    *   Import the Git Repository from your GitHub account.
+
+2.  **Configure the Project:**
+    *   **Framework Preset:** Vercel should automatically detect it as a `Vite` project.
+    *   **Root Directory:** `ticketBooking-frontend`
+
+3.  **Add Environment Variables:**
+    *   In the project settings, go to "Environment Variables".
+    *   Add the following environment variable:
+        *   `VITE_API_BASE_URL`: The URL of your deployed backend on Render (e.g., `https://ticket-booking-backend.onrender.com`). The `VITE_` prefix is important for Vite projects to expose the variable to the client-side code.
+
+4.  **Deploy:**
+    *   Click "Deploy". Vercel will build and deploy your frontend.
+    *   After deployment, you will get a URL for your live frontend.
+
+### Important Notes
+
+*   **CORS:** Ensure your backend allows requests from your Vercel frontend's domain. You may need to configure CORS in your `index.js` on the backend.
+*   **Database IP Whitelist:** If you are using MongoDB Atlas, make sure to add `0.0.0.0/0` to the IP access list to allow connections from Render.
+
+This guide should help you get your application deployed. Let me know if you have any questions!
